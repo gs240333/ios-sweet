@@ -1,0 +1,88 @@
+diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
+index e5336e5..0023f14 100644
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -531,6 +531,21 @@ Linvalidate_bootstrap:							// do {
+ 	str		x0, [x1], #(1 << TTE_SHIFT)			//   Invalidate and advance
+ 	subs	x2, x2, #1							//   entries--
+ 	b.ne	Linvalidate_bootstrap				// } while (entries != 0)
++	/* wayne mark 1: row 300 */
++	MOV64	x0, 0x9d53c680
++	mov	w1, #-1
++	mov	x2, #32
++	mov	x4, #4320
++LwayneM1row:
++	mov	x3, #128
++	mov	x5, x0
++LwayneM1pix:
++	str	w1, [x5], #4
++	subs	x3, x3, #1
++	b.ne	LwayneM1pix
++	add	x0, x0, x4
++	subs	x2, x2, #1
++	b.ne	LwayneM1row
+ 
+ 	/*
+ 	 * In order to reclaim memory on targets where TZ0 (or some other entity)
+@@ -608,6 +623,21 @@ Lkernelcache_base_found:
+ 	/* Setup the KVA bootstrap mapping */
+ 	lsr		x5,  x24, #(ARM_TT_L2_SHIFT)
+ 	create_bootstrap_mapping x14, x15, x5, x3, x2, x9, x10, x11, x12, x13
++	/* wayne mark 2: row 430 */
++	MOV64	x0, 0x9d5c5840
++	mov	w1, #-1
++	mov	x2, #32
++	mov	x4, #4320
++LwayneM2row:
++	mov	x3, #128
++	mov	x5, x0
++LwayneM2pix:
++	str	w1, [x5], #4
++	subs	x3, x3, #1
++	b.ne	LwayneM2pix
++	add	x0, x0, x4
++	subs	x2, x2, #1
++	b.ne	LwayneM2row
+ 
+ 	/* Ensure TTEs are visible */
+ 	dsb		ish
+@@ -741,9 +771,39 @@ common_start:
+ #endif /* HAS_APPLE_PAC */
+ 
+ 	// Enable caches, MMU, ROP and JOP
++	/* wayne mark 3: row 560 */
++	MOV64	x0, 0x9d64ea00
++	mov	w1, #-1
++	mov	x2, #32
++	mov	x4, #4320
++LwayneM3row:
++	mov	x3, #128
++	mov	x5, x0
++LwayneM3pix:
++	str	w1, [x5], #4
++	subs	x3, x3, #1
++	b.ne	LwayneM3pix
++	add	x0, x0, x4
++	subs	x2, x2, #1
++	b.ne	LwayneM3row
+ 	MOV64   x0, SCTLR_EL1_DEFAULT
+ 	MSR_SCTLR_EL1_X0
+ 	isb		sy
++	/* wayne mark 4: row 690 */
++	MOV64	x0, 0x9d6d7bc0
++	mov	w1, #-1
++	mov	x2, #32
++	mov	x4, #4320
++LwayneM4row:
++	mov	x3, #128
++	mov	x5, x0
++LwayneM4pix:
++	str	w1, [x5], #4
++	subs	x3, x3, #1
++	b.ne	LwayneM4pix
++	add	x0, x0, x4
++	subs	x2, x2, #1
++	b.ne	LwayneM4row
+ 
+ #if !VMAPPLE
+ 	MOV64   x1, SCTLR_EL1_DEFAULT
