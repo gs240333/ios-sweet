@@ -1,0 +1,192 @@
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -496,16 +496,96 @@
+ #endif
+ 
+ 	mov		sp, x0
++	/* WAYNE L1: row 960 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d7f4800
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn1a:
++	mov	x4, #160
++Lwn1b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn1b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn1a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 
+ 	// Set up interrupt stack pointer
++	/* WAYNE L2: row 1020 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d833c80
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn2a:
++	mov	x4, #160
++Lwn2b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn2b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn2a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	adrp	x0, EXT(intstack_top)@page			// Load top of irq stack
+ 	add		x0, x0, EXT(intstack_top)@pageoff
+ 	add		x0, x0, x22							// Convert to KVA
+ 	sub		x0, x0, x23
+ 	msr		SPSel, #0							// Set SP_EL0 to interrupt stack
++	/* WAYNE L3: row 1080 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d873100
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn3a:
++	mov	x4, #160
++Lwn3b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn3b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn3a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	mov		sp, x0
+ 
+ 	// Load address to the C init routine into link register
++	/* WAYNE L4: row 1140 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d8b2580
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn4a:
++	mov	x4, #160
++Lwn4b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn4b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn4a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	adrp	lr, EXT(arm_init)@page
+ 	add		lr, lr, EXT(arm_init)@pageoff
+ 	add		lr, lr, x22							// Convert to KVA
+@@ -522,12 +602,92 @@
+ 	 */
+ 
+ 	// Invalidate all entries in the bootstrap page tables
++	/* WAYNE L5: row 1200 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d8f1a00
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn5a:
++	mov	x4, #160
++Lwn5b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn5b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn5a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	mov		x0, #(ARM_TTE_EMPTY)				// Load invalid entry template
++	/* WAYNE L6: row 1260 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d930e80
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn6a:
++	mov	x4, #160
++Lwn6b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn6b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn6a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	mov		x1, x25								// Start at V=P pagetable root
+ 	mov		x2, #(TTE_PGENTRIES)				// Load number of entries per page
++	/* WAYNE L7: row 1320 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d970300
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn7a:
++	mov	x4, #160
++Lwn7b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn7b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn7a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	lsl		x2, x2, #2							// Shift by 2 for num entries on 4 pages
+ 
+ Linvalidate_bootstrap:							// do {
++	/* WAYNE L8: row 1380 */
++	stp	x0, x1, [sp, #-16]!
++	stp	x2, x3, [sp, #-16]!
++	stp	x4, x5, [sp, #-16]!
++	MOV64	x0, 0x9d9af780
++	mov	w1, #-1
++	mov	x2, #24
++	mov	x3, #4320
++Lwn8a:
++	mov	x4, #160
++Lwn8b:
++	str	w1, [x0], #4
++	subs	x4, x4, #1
++	b.ne	Lwn8b
++	add	x0, x0, x3
++	subs	x2, x2, #1
++	b.ne	Lwn8a
++	ldp	x4, x5, [sp], #16
++	ldp	x2, x3, [sp], #16
++	ldp	x0, x1, [sp], #16
+ 	str		x0, [x1], #(1 << TTE_SHIFT)			//   Invalidate and advance
+ 	subs	x2, x2, #1							//   entries--
+ 	b.ne	Linvalidate_bootstrap				// } while (entries != 0)
