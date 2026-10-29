@@ -54,6 +54,12 @@ jobs:
           grep -l '0x9d400000' dxb/patches/*.patch
           # wayne panel is 1080x2340 (sweet is 1080x2400)
           LC_ALL=C sed -i '' 's/EARLY_HEIGHT 2400u/EARLY_HEIGHT 2340u/' dxb/patches/*.patch
+          # wayne: the stage-0 mark is hard-coded to row 2368 (off a 2340 panel); move it on screen
+          LC_ALL=C sed -i '' 's/2368 \* 4320/200 * 4320/' dxb/patches/*.patch
+          # make every early mark wide enough to see in a photo
+          LC_ALL=C sed -i '' 's/stage \* 64/(stage * 128)/' dxb/patches/*.patch
+          LC_ALL=C sed -i '' 's/(stage + 1) \* 64/((stage + 1) * 128)/' dxb/patches/*.patch
+          grep -c '200 \* 4320' dxb/patches/*.patch | grep -v ':0' || true
           LC_ALL=C sed -i '' 's/EARLY_WIDTH 1080u/EARLY_WIDTH 1080u/' dxb/patches/*.patch
           grep -c 'EARLY_HEIGHT 2340u' dxb/patches/*.patch | grep -v ':0' || true
           # libfirehose_kernel is built arm64e-only; the SWEET kernel is plain arm64
