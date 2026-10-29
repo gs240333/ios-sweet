@@ -48,6 +48,10 @@ jobs:
           git -C dxb checkout -q FETCH_HEAD
           # 12.5-14.3 use the top-level patches dir; ours go next to blacktop's
           cp xnu/patches/*.patch xnu/patches/*.sh dxb/patches/
+          # wayne (Mi 6X, SDM660): ABL leaves the splash framebuffer at 0x9d400000
+          # (sweet uses 0x9c000000); retarget the board constants in the patches.
+          sed -i '' 's/0x9c000000/0x9d400000/g' dxb/patches/*.patch
+          grep -l '0x9d400000' dxb/patches/*.patch
           # libfirehose_kernel is built arm64e-only; the SWEET kernel is plain arm64
           sed -i '' 's/ARCHS="x86_64 arm64e" VALID_ARCHS="x86_64 arm64e"/ARCHS="x86_64 arm64e arm64" VALID_ARCHS="x86_64 arm64e arm64"/' dxb/build.sh
           grep -c 'VALID_ARCHS="x86_64 arm64e arm64"' dxb/build.sh
