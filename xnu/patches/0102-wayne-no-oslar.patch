@@ -1,0 +1,13 @@
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -126,8 +126,8 @@
+ 	.globl EXT(reset_vector)
+ LEXT(reset_vector)
+ 	// Preserve x0 for start_first_cpu, if called
+-	// Unlock the core for debugging
+-	msr		OSLAR_EL1, xzr
++	// wayne: OSLAR_EL1 is an Apple-only debug register; skip it
++	nop
+ 	msr		DAIFSet, #(DAIFSC_ALL)				// Disable all interrupts
+ 
+ #if !(defined(KERNEL_INTEGRITY_KTRR) || defined(KERNEL_INTEGRITY_CTRR))
